@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+
 public class ClientSocketHandler extends Thread {
+    ArrayList al = new ArrayList();
+    ArrayList user = new ArrayList();
     private long portNumber = 5000;
     private static final String TAG = "ClientSocketHandler";
     private Handler handler;

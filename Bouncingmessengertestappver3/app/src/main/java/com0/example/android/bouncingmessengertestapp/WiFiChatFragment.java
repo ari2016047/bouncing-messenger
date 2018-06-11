@@ -27,12 +27,13 @@ import java.util.List;
 public class WiFiChatFragment extends Fragment {
     private View view;
     private ChatManager chatManager;
+    private GroupChatManager groupChatManager;
     private TextView chatLine;
     private ListView listView;
     ChatMessageAdapter adapter = null;
     private List<String> items = new ArrayList<String>();
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_chat, container, false);
         chatLine = (TextView) view.findViewById(R.id.txtChatLine);
@@ -44,12 +45,18 @@ public class WiFiChatFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View arg0) {
-                        if (chatManager != null) {
-                            chatManager.write(chatLine.getText().toString()
+                        if (groupChatManager != null) {
+                            groupChatManager.tellToEveryone(chatLine.getText().toString()
                                     .getBytes());
                             pushMessage("Me: " + chatLine.getText().toString());
                             chatLine.setText("");
                             //chatLine.clearFocus();
+                        }
+                        else if(chatManager != null){
+                            pushMessage("Me: " + chatLine.getText().toString());
+                            chatManager.write(chatLine.getText().toString()
+                                    .getBytes());
+                            chatLine.setText("");
                         }
                     }
                 });
@@ -58,12 +65,20 @@ public class WiFiChatFragment extends Fragment {
     public interface MessageTarget {
         public Handler getHandler();
     }
+    public void setGroupChatManager(GroupChatManager obj){
+        groupChatManager = obj;
+    }
     public void setChatManager(ChatManager obj) {
         chatManager = obj;
     }
     public void pushMessage(String readMessage) {
         adapter.add(readMessage);
         adapter.notifyDataSetChanged();
+    }
+    public void forEveryone(byte[] buffer){
+        if (groupChatManager != null) {
+            groupChatManager.tellToEveryone(buffer);
+        }
     }
     /**
      * ArrayAdapter to manage chat messages.

@@ -53,7 +53,7 @@ import static android.app.PendingIntent.getActivity;
  * the interface and messaging needs for a chat session.
  */
 public class WiFiServiceDiscoveryActivity extends Activity implements
-        DeviceClickListener, Handler.Callback, MessageTarget,
+        DeviceClickListener,Handler.Callback, MessageTarget,
         ConnectionInfoListener {
 
     public static final String TAG = "New Internet";
@@ -84,7 +84,7 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
     private Intent intentGroup;
     private boolean isWifiP2pEnabled = false;
     private int memberCount = 1;
-    private WiFiChatFragment chatFragmentTag;
+    private GroupChatManager groupChatManager;
 
     final Handler hand = new Handler();
 
@@ -322,10 +322,16 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 Log.d(TAG, readMessage);
                 (chatFragment).pushMessage("Buddy: " + readMessage);
+                if(mem_info.equals("Group Owner"))
+                    chatFragment.forEveryone(readMessage.getBytes());
                 break;
             case MY_HANDLE:
                 Object obj = msg.obj;
+                if(mem_info.equals("Group Owner"))
+                    (chatFragment).setGroupChatManager((GroupChatManager) obj);
+                else{
                 (chatFragment).setChatManager((ChatManager) obj);
+                }
         }
         return true;
     }

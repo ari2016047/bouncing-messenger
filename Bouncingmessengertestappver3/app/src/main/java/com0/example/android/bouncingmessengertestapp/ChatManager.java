@@ -6,10 +6,15 @@ package com0.example.android.bouncingmessengertestapp;
 
 import android.os.Handler;
 import android.util.Log;
+
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * Handles reading and writing of messages with socket buffers. Uses a Handler
  * to post messages to UI thread for UI updates.
@@ -17,18 +22,20 @@ import java.net.Socket;
 public class ChatManager implements Runnable {
     private Socket socket = null;
     private Handler handler;
-
+    private String userName;
 
     public final int MESSAGE_SIZE = 1048576;
 
 
-    public ChatManager(Socket socket, Handler handler) {
+    public ChatManager(Socket socket, Handler handler){
         this.socket = socket;
         this.handler = handler;
     }
+
     private InputStream iStream;
     private OutputStream oStream;
-    private static final String TAG = "ChatHandler";
+    private static final String TAG = "ChatManager";
+
     @Override
     public void run() {
         try {
@@ -47,8 +54,10 @@ public class ChatManager implements Runnable {
                     }
                     // Send the obtained bytes to the UI Activity
                     Log.d(TAG, "Rec:" + String.valueOf(buffer));
+
                     handler.obtainMessage(WiFiServiceDiscoveryActivity.MESSAGE_READ,
                             bytes, -1, buffer).sendToTarget();
+
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected ", e);
                 }

@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.util.Log;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -16,13 +18,19 @@ import java.util.concurrent.TimeUnit;
  * group owner.
  */
 public class GroupOwnerSocketHandler extends Thread {
-    ServerSocket socket = null;
+    ArrayList al = new ArrayList();
+    ArrayList users = new ArrayList();
+    ServerSocket serverSocket = null;
+    Socket s;
+    private final static int PORT = 4545;
     private final int THREAD_COUNT = 10;
     private Handler handler;
     private static final String TAG = "GroupOwnerSocketHandler";
+
     public GroupOwnerSocketHandler(Handler handler) throws IOException {
         try {
-            socket = new ServerSocket(4545);
+            if(serverSocket==null)
+                serverSocket = new ServerSocket(PORT);
             this.handler = handler;
             Log.d("GroupOwnerSocketHandler", "Socket Started");
         } catch (IOException e) {
@@ -43,12 +51,14 @@ public class GroupOwnerSocketHandler extends Thread {
             try {
                 // A blocking operation. Initiate a ChatManager instance when
                 // there is a new connection
-                pool.execute(new ChatManager(socket.accept(), handler));
+                s = serverSocket.accept();
+                pool.execute(new GroupChatManager(s, handler,al, users));
                 Log.d(TAG, "Launching the I/O handler");
+
             } catch (IOException e) {
                 try {
-                    if (socket != null && !socket.isClosed())
-                        socket.close();
+                    if (serverSocket != null && !serverSocket.isClosed())
+                        serverSocket.close();
                 } catch (IOException ioe) {
                 }
                 e.printStackTrace();
