@@ -46,15 +46,15 @@ public class WiFiChatFragment extends Fragment {
                     @Override
                     public void onClick(View arg0) {
                         if (groupChatManager != null) {
-                            groupChatManager.tellToEveryone(chatLine.getText().toString()
+                            pushMessage( "Me: " + chatLine.getText().toString());
+                            groupChatManager.tellToEveryone((WiFiServiceDiscoveryActivity.username+": "+chatLine.getText().toString())
                                     .getBytes());
-                            pushMessage("Me: " + chatLine.getText().toString());
                             chatLine.setText("");
                             //chatLine.clearFocus();
                         }
                         else if(chatManager != null){
                             pushMessage("Me: " + chatLine.getText().toString());
-                            chatManager.write(chatLine.getText().toString()
+                            chatManager.write((WiFiServiceDiscoveryActivity.username + ": " + chatLine.getText().toString())
                                     .getBytes());
                             chatLine.setText("");
                         }

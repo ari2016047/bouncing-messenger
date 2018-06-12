@@ -18,9 +18,9 @@ import java.util.concurrent.TimeUnit;
  * group owner.
  */
 public class GroupOwnerSocketHandler extends Thread {
-    ArrayList al = new ArrayList();
-    ArrayList users = new ArrayList();
-    ServerSocket serverSocket = null;
+    static ArrayList al = new ArrayList();
+    static ArrayList users = new ArrayList();
+    static ServerSocket serverSocket = null;
     Socket s;
     private final static int PORT = 4545;
     private final int THREAD_COUNT = 10;
@@ -29,8 +29,10 @@ public class GroupOwnerSocketHandler extends Thread {
 
     public GroupOwnerSocketHandler(Handler handler) throws IOException {
         try {
-            if(serverSocket==null)
+            if(serverSocket==null){
                 serverSocket = new ServerSocket(PORT);
+                users.add(WiFiServiceDiscoveryActivity.username);
+            }
             this.handler = handler;
             Log.d("GroupOwnerSocketHandler", "Socket Started");
         } catch (IOException e) {

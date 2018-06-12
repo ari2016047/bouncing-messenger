@@ -36,7 +36,9 @@ import com0.example.android.bouncingmessengertestapp.WiFiDirectServicesList.Devi
 import com0.example.android.bouncingmessengertestapp.WiFiDirectServicesList.WiFiDevicesAdapter;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import android.net.wifi.WifiManager;
 import static android.app.PendingIntent.getActivity;
@@ -67,7 +69,10 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
     public static final int MESSAGE_READ = 0x400 + 1;
     public static final int MY_HANDLE = 0x400 + 2;
     public static String mem_info = "";
+    public static final String usercode = "#@@!";
+    public static String username = null;
 
+    private ArrayList userList;
     private Intent starterIntent ;
     private WifiManager wifiManager;
     private WifiP2pManager manager;
@@ -288,6 +293,7 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = service.device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
+        username = service.deviceName;
         if (serviceRequest != null)
             manager.removeServiceRequest(channel, serviceRequest,
                     new ActionListener() {
@@ -321,7 +327,16 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 Log.d(TAG, readMessage);
-                (chatFragment).pushMessage("Buddy: " + readMessage);
+                if(readMessage.startsWith(usercode))
+                {
+                    setUserList(readMessage);
+                }
+                else if (readMessage.startsWith(username)){
+                    int nevertobeuserinthiscode = 0;
+                }
+                else {
+                    (chatFragment).pushMessage(readMessage);
+                }
                 if(mem_info.equals("Group Owner"))
                     chatFragment.forEveryone(readMessage.getBytes());
                 break;
@@ -435,6 +450,11 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
             AlertDialog alert = wifialert.create();
             alert.setTitle("permission");
             alert.show();
-
     }
+
+    public void setUserList(String s){
+        if(s!=null)
+            appendStatus(s);
+    }
+
 }

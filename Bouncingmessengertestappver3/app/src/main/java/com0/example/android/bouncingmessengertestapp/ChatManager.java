@@ -23,6 +23,7 @@ public class ChatManager implements Runnable {
     private Socket socket = null;
     private Handler handler;
     private String userName;
+    private WiFiServiceDiscoveryActivity activity;
 
     public final int MESSAGE_SIZE = 1048576;
 
@@ -43,6 +44,8 @@ public class ChatManager implements Runnable {
             oStream = socket.getOutputStream();
             byte[] buffer = new byte[MESSAGE_SIZE];
             int bytes;
+            write((WiFiServiceDiscoveryActivity.usercode + WiFiServiceDiscoveryActivity.username).getBytes());
+
             handler.obtainMessage(WiFiServiceDiscoveryActivity.MY_HANDLE, this)
                     .sendToTarget();
             while (true) {
@@ -54,9 +57,11 @@ public class ChatManager implements Runnable {
                     }
                     // Send the obtained bytes to the UI Activity
                     Log.d(TAG, "Rec:" + String.valueOf(buffer));
+                    String temp = new String(buffer);
+                    Log.d(TAG,"Rec: " + temp);
 
                     handler.obtainMessage(WiFiServiceDiscoveryActivity.MESSAGE_READ,
-                            bytes, -1, buffer).sendToTarget();
+                                bytes, -1, buffer).sendToTarget();
 
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected ", e);

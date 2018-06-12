@@ -10,6 +10,8 @@ import java.util.Iterator;
 import android.os.Handler;
 import android.util.Log;
 
+import static com0.example.android.bouncingmessengertestapp.WiFiServiceDiscoveryActivity.usercode;
+
 public class GroupChatManager implements Runnable{
 
     public final int MESSAGE_SIZE = 1048576;
@@ -21,6 +23,7 @@ public class GroupChatManager implements Runnable{
     private ArrayList socketList;
     private ArrayList userList;
     private String username;
+    private WiFiServiceDiscoveryActivity activity;
 
     private InputStream iStream;
     private OutputStream oStream;
@@ -30,6 +33,20 @@ public class GroupChatManager implements Runnable{
         this.handler = handler;
         this.socketList = sl;
         this.userList = users;
+        try {
+            iStream = s.getInputStream();
+            byte[] buffer = new byte[MESSAGE_SIZE];
+            int bytes;
+
+            String readMessage = new String(buffer);
+            if (readMessage.substring(0, 4).equals(usercode)) {
+                Log.d(TAG, "got the name of client" + readMessage);
+                userList.add(readMessage);
+                UpdateUserList();
+            }
+        }catch (IOException e){
+            Log.e(TAG, "failed to get username ", e);
+        }
         socketList.add(s);
     }
 
@@ -38,16 +55,20 @@ public class GroupChatManager implements Runnable{
             iStream = s.getInputStream();
             byte[] buffer = new byte[MESSAGE_SIZE];
             int bytes;
-            handler.obtainMessage(WiFiServiceDiscoveryActivity.MY_HANDLE,this)
+            tellToEveryone((WiFiServiceDiscoveryActivity.usercode + WiFiServiceDiscoveryActivity.username).getBytes());
+            handler.obtainMessage(WiFiServiceDiscoveryActivity.MY_HANDLE, this)
                     .sendToTarget();
             while(true){
                 try{
                     bytes = iStream.read(buffer);
+
                     if(bytes==-1){
                         break;
                     }
+
                     handler.obtainMessage(WiFiServiceDiscoveryActivity.MESSAGE_READ,
                             bytes, -1, buffer).sendToTarget();
+
                 }catch (IOException e){
                     Log.e(TAG, "disconnected ", e);
                 }
@@ -80,5 +101,8 @@ public class GroupChatManager implements Runnable{
             }
         }
     }
-
+    public void UpdateUserList(){
+        tellToEveryone(userList.toString().getBytes());
+        activity.setUserList(userList.toString());
+    }
 }
