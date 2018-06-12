@@ -25,23 +25,9 @@
         android:label="@string/app_name">
         <activity
             android:name="com0.example.android.bouncingmessengertestapp.WiFiServiceDiscoveryActivity"
-            android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name="com0.example.android.bouncingmessengertestapp.add_contacts">
-            <intent-filter>
-                <action android:name="com0.example.android.bouncingmessengertestapp.add_contacts" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name="com0.example.android.bouncingmessengertestapp.Contacts">
-            <intent-filter>
-                <action android:name="com0.example.android.bouncingmessengertestapp.Contacts" />
+                <action android:name="com0.example.android.bouncingmessengertestapp.WiFiServiceDiscoveryActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -51,11 +37,27 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name="com0.example.android.bouncingmessengertestapp.GroupActivity"
+        <activity
+            android:name="com0.example.android.bouncingmessengertestapp.GroupActivity"
             android:label="Group">
             <intent-filter>
-                <action android:name="com0.example.android.bouncingmessengertestapp.GroupActivity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com0.example.android.bouncingmessengertestapp.GroupActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com0.example.android.bouncingmessengertestapp.Activity_Login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com0.example.android.bouncingmessengertestapp.SignUp">
+            <intent-filter>
+                <action android:name="com0.example.android.bouncingmessengertestapp.SignUp" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -108,6 +109,9 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences preferences = getSharedPreferences("MYPREFS", MODE_PRIVATE);
+        String uname = preferences.getString("username", "");
         //starterIntent = getIntent();
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if(!(wifiManager.isWifiEnabled())){
@@ -120,7 +124,7 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
         StrictMode.setThreadPolicy(policy);
 
         statusTxtView = (TextView) findViewById(R.id.status_text);
-
+        appendStatus("***** Welcome "+uname+" *****");
 
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);

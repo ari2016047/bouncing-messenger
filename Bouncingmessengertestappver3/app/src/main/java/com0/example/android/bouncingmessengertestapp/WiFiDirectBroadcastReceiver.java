@@ -57,11 +57,9 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                 // Wifi Direct mode is enabled
                 activity.setIsWifiP2pEnabled(true);
                 statusView = (TextView) activity.findViewById(R.id.status_text);
-                if (checkstatus()){
-                    activity.appendStatus("P2p Enabled");
-                }
-
-            } else {
+                activity.appendStatus("P2p Enabled");
+            }
+            else {
                 activity.setIsWifiP2pEnabled(false);
                 activity.appendStatus("P2p not Enabled");
             }
